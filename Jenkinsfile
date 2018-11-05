@@ -18,7 +18,8 @@ pipeline {
                     ls -lah
                 '''
                 dir(repositoryName) {
-                        sh "pwd"
+                        sh 'pwd'
+                        sh 'ls'
 
                 }
             }
