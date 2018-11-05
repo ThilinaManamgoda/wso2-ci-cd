@@ -1,17 +1,11 @@
-pipeline {
-    agent any
+node('master'){
     String repositoryName='wso2-ci-cd-artifacts';
-    stages {
+
         stage('Preparation') {
-            checkout([$class: 'GitSCM', branches: [[name: '*/master']],
-                      doGenerateSubmoduleConfigurations: false,
-                      extensions                       : [[$class: 'LocalBranch', localBranch: 'master'],
-                                                          [$class: 'RelativeTargetDirectory', relativeTargetDir: repositoryName]],
-                      submoduleCfg: [],
-                      userRemoteConfigs: [[url: 'https://github.com/ThilinaManamgoda/wso2-ci-cd-artifacts']]]);
+            checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/ThilinaManamgoda/wso2-ci-cd-artifacts.git']]])
         }
         stage('Build') {
-            steps {
+
                 sh 'echo "Hello World"'
                 sh '''
                     echo "Multiline shell steps works too"
@@ -21,8 +15,8 @@ pipeline {
                         sh 'pwd'
                         sh 'ls'
 
-                }
+
             }
         }
-    }
+
 }
