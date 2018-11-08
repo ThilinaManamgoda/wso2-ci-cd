@@ -94,7 +94,8 @@ node('master'){
 
                 withAWS(credentials: AWS_CREDS,region: env.REGION) {
                   def outputs = cfnUpdate(stack: STAGING_STACK, file: CF_FILE, params:[AWSAccessKeyId, AWSAccessKeySecret,WSO2InstanceType, KeyPairName, CertificateName, DBUsername, DBPassword, JDKVersion, AMIID], timeoutInMinutes:20, pollInterval:1000)
-                  env.TEST_URL = outputs.'MgtConsoleUrl'
+                  env.TEST_URL = outputs.'ESBHttpUrl'
+                  echo "$TEST_URL"
                 //   echo "Deleting STACK"
                 //   sleep time: 1, unit: 'MINUTES'
                 //   cfnDelete(stack: PROD_STACK, pollInterval:1000)
