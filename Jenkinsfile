@@ -15,7 +15,7 @@ node('master'){
         def CF_FILE_DIR="/home/jenkins/cf"
         def CF_FILE="$CF_FILE_DIR/cf.yaml"
         def STAGING_CF_FILE="$CF_FILE_DIR/cf-staging.yaml"
-        def PACKER_MANIFEST='/home/jenkins/packer/manifest.json'
+        env.PACKER_MANIFEST='/home/jenkins/packer/manifest.json'
         env.PACKER_JSON='/home/jenkins/packer/packer-puppetmaster_kavindu.json'
         env.AWS_CREDS_FILE='/home/ubuntu/.aws/credentials'
         def WUM_CREDS='wum_creds'
