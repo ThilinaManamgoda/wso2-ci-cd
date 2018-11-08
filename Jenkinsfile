@@ -51,7 +51,7 @@ node('master'){
 
         stage(GENERATE_AMI) {
             echo "##################################### Generate AMI #####################################"
-            env.PRODUCT_DIS="${PRODUCT}-${VERSION}.zip"
+            env.PRODUCT_DIST="${PRODUCT}-${VERSION}.zip"
             BUILD_FULL = sh (
                                 script: '''
                                  export AWS_SHARED_CREDENTIALS_FILE=$AWS_CREDS_FILE
