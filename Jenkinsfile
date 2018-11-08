@@ -86,7 +86,7 @@ node('master'){
         }
 
         stage(STAGING_DEPLOYMENT) {
-            echo "##################################### Deploying to Production ######################################"
+            echo "##################################### Deploying to Staging ######################################"
             def STAGING_STACK="staging-stack"
             def WSO2InstanceType="WSO2InstanceType=${env.WSO2InstanceType}"
             def KeyPairName="KeyPairName=${env.KeyPairName}"
@@ -112,7 +112,7 @@ node('master'){
 
         stage(RUNNING_TEST) {
             // echo(env.AWS_ACCESS_KEY_ID)
-
+            echo "##################################### Running Test ######################################"
             sleep time: 10, unit: 'MINUTES'
 
             TEST_PASS = sh (
