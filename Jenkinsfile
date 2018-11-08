@@ -105,6 +105,9 @@ node('master'){
 
         stage(RUNNING_TEST) {
             // echo(env.AWS_ACCESS_KEY_ID)
+
+            sleep time: 10, unit: 'MINUTES'
+
             TEST_PASS = sh (
                                 script: '''
                                  ./test.sh
