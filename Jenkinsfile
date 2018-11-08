@@ -14,6 +14,7 @@ node('master'){
         def PUPPET_CONF_FILE="/home/jenkins/conf-home/script/apply-config.sh"
         def CF_FILE_DIR="/home/jenkins/cf"
         def CF_FILE="$CF_FILE_DIR/cf.yaml"
+        def STAGING_CF_FILE="$CF_FILE_DIR/cf-staging.yaml"
         def PACKER_MANIFEST='/home/jenkins/packer/manifest.json'
         env.PACKER_JSON='/home/jenkins/packer/packer-puppetmaster_kavindu.json'
         env.AWS_CREDS_FILE='/home/ubuntu/.aws/credentials'
@@ -51,6 +52,12 @@ node('master'){
 
         stage(GENERATE_AMI) {
             echo "##################################### Generate AMI #####################################"
+            DELETED = sh (
+                                script: '''
+                                test -e $PACKER_MANIFEST && rm -f $PACKER_MANIFEST
+                                ''',
+                                returnStatus: true
+                            )
             env.PRODUCT_DIST="${PRODUCT}-${VERSION}.zip"
             BUILD_FULL = sh (
                                 script: '''
@@ -93,7 +100,7 @@ node('master'){
         //         def AWSAccessKeySecret="AWSAccessKeySecret=${env.AWS_SECRET_ACCESS_KEY}"
         //
         //         withAWS(credentials: AWS_CREDS,region: env.REGION) {
-        //           def outputs = cfnUpdate(stack: STAGING_STACK, file: CF_FILE, params:[AWSAccessKeyId, AWSAccessKeySecret,WSO2InstanceType, KeyPairName, CertificateName, DBUsername, DBPassword, JDKVersion, AMIID], timeoutInMinutes:20, pollInterval:1000)
+        //           def outputs = cfnUpdate(stack: STAGING_STACK, file: STAGING_CF_FILE, params:[AWSAccessKeyId, AWSAccessKeySecret,WSO2InstanceType, KeyPairName, CertificateName, DBUsername, DBPassword, JDKVersion, AMIID], timeoutInMinutes:20, pollInterval:1000)
         //           env.TEST_URL = outputs.'ESBHttpUrl'
         //           echo "$TEST_URL"
         //         //   echo "Deleting STACK"
