@@ -19,7 +19,7 @@ node('master'){
         env.AWS_CREDS_FILE='/home/ubuntu/.aws/credentials'
         def WUM_CREDS='wum_creds'
         def AWS_CREDS='aws_creds1'
-        def PUPET_CONF_DIR='/home/ubuntu/conf-home/modules/'
+        def PUPET_CONF_DIR='/home/jenkins/conf-home/modules/'
 
         stage(LOAD_ENV) {
             echo "####################################### Loading Environment variables #######################################"
