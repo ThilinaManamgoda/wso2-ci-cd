@@ -18,6 +18,7 @@ node('master'){
         env.AWS_CREDS_FILE='/home/ubuntu/.aws/credentials'
         def WUM_CREDS='wum_creds'
         def AWS_CREDS='aws_creds1'
+        def PUPET_CONF_DIR='/home/ubuntu/conf-home/modules/'
 
         stage(LOAD_ENV) {
             echo "####################################### Loading Environment variables #######################################"
@@ -29,7 +30,9 @@ node('master'){
             dir(CF_FILE_DIR) {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: env.GIT_REPO_CF]]])
             }
-
+            dir(PUPET_CONF_DIR) {
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: env.env.GIT_REPO_PUPPET]]])
+            }
         }
         stage(GENERATE_PACK) {
           echo "##################################### Generate Pack with configs #####################################"
@@ -39,7 +42,6 @@ node('master'){
                                 script: PUPPET_CONF_FILE,
                                 returnStatus: true
                             )
-
           if (BUILD_FULL==1) {
                 handleError(GENERATE_PACK,1)
             }
