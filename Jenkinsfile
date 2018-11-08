@@ -85,47 +85,47 @@ node('master'){
                             ).trim()
         }
 
-        // stage(STAGING_DEPLOYMENT) {
-        //     echo "##################################### Deploying to Production ######################################"
-        //     def STAGING_STACK="staging-stack"
-        //     def WSO2InstanceType="WSO2InstanceType=${env.WSO2InstanceType}"
-        //     def KeyPairName="KeyPairName=${env.KeyPairName}"
-        //     def CertificateName="CertificateName=${env.CertificateName}"
-        //     def DBUsername="DBUsername=${env.DBUsername}"
-        //     def DBPassword="DBPassword=${env.DBPassword}"
-        //     def JDKVersion="JDKVersion=${env.JDKVersion}"
-        //     def AMIID="AMIid=${env.AMI_ID}"
-        //     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: AWS_CREDS]]) {
-        //         def AWSAccessKeyId="AWSAccessKeyId=${env.AWS_ACCESS_KEY_ID}"
-        //         def AWSAccessKeySecret="AWSAccessKeySecret=${env.AWS_SECRET_ACCESS_KEY}"
-        //
-        //         withAWS(credentials: AWS_CREDS,region: env.REGION) {
-        //           def outputs = cfnUpdate(stack: STAGING_STACK, file: STAGING_CF_FILE, params:[AWSAccessKeyId, AWSAccessKeySecret,WSO2InstanceType, KeyPairName, CertificateName, DBUsername, DBPassword, JDKVersion, AMIID], timeoutInMinutes:20, pollInterval:1000)
-        //           env.TEST_URL = outputs.'ESBHttpUrl'
-        //           echo "$TEST_URL"
-        //         //   echo "Deleting STACK"
-        //         //   sleep time: 1, unit: 'MINUTES'
-        //         //   cfnDelete(stack: PROD_STACK, pollInterval:1000)
-        //         }
-        //     }
-        // }
-        //
-        // stage(RUNNING_TEST) {
-        //     // echo(env.AWS_ACCESS_KEY_ID)
-        //
-        //     sleep time: 10, unit: 'MINUTES'
-        //
-        //     TEST_PASS = sh (
-        //                         script: '''
-        //                          ./test.sh
-        //                         ''',
-        //                         returnStatus: true
-        //                     )
-        //
-        //     if (TEST_PASS==1) {
-        //         handleError(RUNNING_TEST,1)
-        //     }
-        // }
+        stage(STAGING_DEPLOYMENT) {
+            echo "##################################### Deploying to Production ######################################"
+            def STAGING_STACK="staging-stack"
+            def WSO2InstanceType="WSO2InstanceType=${env.WSO2InstanceType}"
+            def KeyPairName="KeyPairName=${env.KeyPairName}"
+            def CertificateName="CertificateName=${env.CertificateName}"
+            def DBUsername="DBUsername=${env.DBUsername}"
+            def DBPassword="DBPassword=${env.DBPassword}"
+            def JDKVersion="JDKVersion=${env.JDKVersion}"
+            def AMIID="AMIid=${env.AMI_ID}"
+            withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: AWS_CREDS]]) {
+                def AWSAccessKeyId="AWSAccessKeyId=${env.AWS_ACCESS_KEY_ID}"
+                def AWSAccessKeySecret="AWSAccessKeySecret=${env.AWS_SECRET_ACCESS_KEY}"
+
+                withAWS(credentials: AWS_CREDS,region: env.REGION) {
+                  def outputs = cfnUpdate(stack: STAGING_STACK, file: STAGING_CF_FILE, params:[AWSAccessKeyId, AWSAccessKeySecret,WSO2InstanceType, KeyPairName, CertificateName, DBUsername, DBPassword, JDKVersion, AMIID], timeoutInMinutes:20, pollInterval:1000)
+                  env.TEST_URL = outputs.'ESBHttpUrl'
+                  echo "$TEST_URL"
+                //   echo "Deleting STACK"
+                //   sleep time: 1, unit: 'MINUTES'
+                //   cfnDelete(stack: PROD_STACK, pollInterval:1000)
+                }
+            }
+        }
+        
+        stage(RUNNING_TEST) {
+            // echo(env.AWS_ACCESS_KEY_ID)
+
+            sleep time: 10, unit: 'MINUTES'
+
+            TEST_PASS = sh (
+                                script: '''
+                                 ./test.sh
+                                ''',
+                                returnStatus: true
+                            )
+
+            if (TEST_PASS==1) {
+                handleError(RUNNING_TEST,1)
+            }
+        }
 
         // stage(PROD_DEPLOYMENT) {
         //     echo "##################################### Deploying to Production ######################################"
