@@ -76,7 +76,7 @@ node('master'){
             def (value1, value2) = "$ami_info".tokenize( ':' )
             env.AMI_ID=value2
             echo "AMI_ID: $AMI_ID"
-            sh "rm -f $PACKER_MANIFEST"
+            // sh "rm -f $PACKER_MANIFEST"
             env.REGION=sh (
                                 script: '''
                                  ec2metadata --availability-zone | sed \'s/[a-z]$//\'
