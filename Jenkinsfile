@@ -16,10 +16,10 @@ node('master'){
         def CF_FILE="$CF_FILE_DIR/cf.yaml"
         def STAGING_CF_FILE="$CF_FILE_DIR/cf-staging.yaml"
         env.PACKER_MANIFEST='/home/jenkins/packer/manifest.json'
-        env.PACKER_JSON='/home/jenkins/packer/packer-puppetmaster_kavindu.json'
+        env.PACKER_JSON='/home/jenkins/packer/packer-puppetmaster.json'
         env.AWS_CREDS_FILE='/home/ubuntu/.aws/credentials'
         def WUM_CREDS='wum_creds'
-        def AWS_CREDS='aws_creds1'
+        def AWS_CREDS='aws_creds'
         def PUPPET_CONF_DIR='/home/jenkins/conf-home/modules/'
 
         stage(LOAD_ENV) {
@@ -38,7 +38,7 @@ node('master'){
         }
         stage(GENERATE_PACK) {
           echo "##################################### Generate Pack with configs #####################################"
-          env.ARTIFACT_LOC='/var/lib/jenkins/workspace/Test/carbon-home'
+          env.ARTIFACT_LOC="$WORKSPACE/conf-home"
           withCredentials([usernamePassword(credentialsId: WUM_CREDS, passwordVariable: 'WUM_PASSWORD', usernameVariable: 'WUM_USERNAME')]) {
           BUILD_FULL = sh (
                                 script: PUPPET_CONF_FILE,
