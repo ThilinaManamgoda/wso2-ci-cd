@@ -109,7 +109,6 @@ node('master'){
 
         stage(RUNNING_TEST) {
             echo "##################################### Running Test ######################################"
-            sleep time: 3, unit: 'MINUTES'
 
             TEST_PASS = sh (
                                 script: '''
