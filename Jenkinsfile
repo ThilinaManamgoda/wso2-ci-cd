@@ -38,7 +38,7 @@ node('master'){
         }
         stage(GENERATE_PACK) {
           echo "##################################### Generate Pack with configs #####################################"
-          env.ARTIFACT_LOC="$WORKSPACE/conf-home"
+          env.ARTIFACT_LOC="$WORKSPACE/carbon-home"
           withCredentials([usernamePassword(credentialsId: WUM_CREDS, passwordVariable: 'WUM_PASSWORD', usernameVariable: 'WUM_USERNAME')]) {
           BUILD_FULL = sh (
                                 script: PUPPET_CONF_FILE,
