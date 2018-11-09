@@ -75,8 +75,6 @@ node('master'){
             def ami_info=packer_post.builds.artifact_id[0]
             def (value1, value2) = "$ami_info".tokenize( ':' )
             env.AMI_ID=value2
-            echo "AMI_ID: $AMI_ID"
-            // sh "rm -f $PACKER_MANIFEST"
             env.REGION=sh (
                                 script: '''
                                  ec2metadata --availability-zone | sed \'s/[a-z]$//\'
@@ -87,7 +85,7 @@ node('master'){
 
         stage(STAGING_DEPLOYMENT) {
             echo "##################################### Deploying to Staging ######################################"
-            def STAGING_STACK="staging-stack1"
+            def STAGING_STACK="staging-stack"
             def WSO2InstanceType="WSO2InstanceType=${env.WSO2InstanceType}"
             def KeyPairName="KeyPairName=${env.KeyPairName}"
             def CertificateName="CertificateName=${env.CertificateName}"
@@ -124,7 +122,7 @@ node('master'){
 
         stage(PROD_DEPLOYMENT) {
             echo "##################################### Deploying to Production ######################################"
-            def PROD_STACK="prod-stack1"
+            def PROD_STACK="prod-stack"
             def WSO2InstanceType="WSO2InstanceType=${env.WSO2InstanceType}"
             def KeyPairName="KeyPairName=${env.KeyPairName}"
             def CertificateName="CertificateName=${env.CertificateName}"
