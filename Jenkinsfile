@@ -20,7 +20,7 @@ node('master'){
         env.AWS_CREDS_FILE='/home/ubuntu/.aws/credentials'
         def WUM_CREDS='wum_creds'
         def AWS_CREDS='aws_creds1'
-        def PUPET_CONF_DIR='/home/jenkins/conf-home/modules/'
+        def PUPPET_CONF_DIR='/home/jenkins/conf-home/modules/'
 
         stage(LOAD_ENV) {
             echo "####################################### Loading Environment variables #######################################"
@@ -32,7 +32,7 @@ node('master'){
             dir(CF_FILE_DIR) {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: env.GIT_REPO_CF]]])
             }
-            dir(PUPET_CONF_DIR) {
+            dir(PUPPET_CONF_DIR) {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: env.GIT_REPO_PUPPET]]])
             }
         }
@@ -102,18 +102,14 @@ node('master'){
                 withAWS(credentials: AWS_CREDS,region: env.REGION) {
                   def outputs = cfnUpdate(stack: STAGING_STACK, file: STAGING_CF_FILE, params:[AWSAccessKeyId, AWSAccessKeySecret,WSO2InstanceType, KeyPairName, CertificateName, DBUsername, DBPassword, JDKVersion, AMIID], timeoutInMinutes:20, pollInterval:1000)
                   env.TEST_URL = outputs.'ESBHttpUrl'
-                  echo "$TEST_URL"
-                //   echo "Deleting STACK"
-                //   sleep time: 1, unit: 'MINUTES'
-                //   cfnDelete(stack: PROD_STACK, pollInterval:1000)
+                  echo "Test Endpoint: $TEST_URL"
                 }
             }
         }
 
         stage(RUNNING_TEST) {
-            // echo(env.AWS_ACCESS_KEY_ID)
             echo "##################################### Running Test ######################################"
-            sleep time: 10, unit: 'MINUTES'
+            sleep time: 3, unit: 'MINUTES'
 
             TEST_PASS = sh (
                                 script: '''
@@ -143,10 +139,6 @@ node('master'){
 
                 withAWS(credentials: AWS_CREDS,region: env.REGION) {
                   def outputs = cfnUpdate(stack: PROD_STACK, file: CF_FILE, params:[AWSAccessKeyId, AWSAccessKeySecret,WSO2InstanceType, KeyPairName, CertificateName, DBUsername, DBPassword, JDKVersion, AMIID], timeoutInMinutes:20, pollInterval:1000)
-                  env.TEST_URL = outputs.'MgtConsoleUrl'
-                //   echo "Deleting STACK"
-                //   sleep time: 1, unit: 'MINUTES'
-                //   cfnDelete(stack: PROD_STACK, pollInterval:1000)
                 }
             }
         }
