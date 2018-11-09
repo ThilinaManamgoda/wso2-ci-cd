@@ -85,7 +85,7 @@ node('master'){
 
         stage(STAGING_DEPLOYMENT) {
             echo "##################################### Deploying to Staging ######################################"
-            def STAGING_STACK="staging-stack"
+            def STAGING_STACK="staging-stack1"
             def WSO2InstanceType="WSO2InstanceType=${env.WSO2InstanceType}"
             def KeyPairName="KeyPairName=${env.KeyPairName}"
             def CertificateName="CertificateName=${env.CertificateName}"
@@ -122,7 +122,7 @@ node('master'){
 
         stage(PROD_DEPLOYMENT) {
             echo "##################################### Deploying to Production ######################################"
-            def PROD_STACK="prod-stack"
+            def PROD_STACK="prod-stack1"
             def WSO2InstanceType="WSO2InstanceType=${env.WSO2InstanceType}"
             def KeyPairName="KeyPairName=${env.KeyPairName}"
             def CertificateName="CertificateName=${env.CertificateName}"
