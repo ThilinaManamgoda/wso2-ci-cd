@@ -39,6 +39,7 @@ node('master'){
         stage(GENERATE_PACK) {
           echo "##################################### Generate Pack with configs #####################################"
           env.ARTIFACT_LOC="$WORKSPACE/carbon-home"
+          env.ZIP_OUTPUT_LOC="/home/jenkins/packer-resources/pack"
           withCredentials([usernamePassword(credentialsId: WUM_CREDS, passwordVariable: 'WUM_PASSWORD', usernameVariable: 'WUM_USERNAME')]) {
           BUILD_FULL = sh (
                                 script: PUPPET_CONF_FILE,
@@ -136,7 +137,24 @@ node('master'){
 
                 withAWS(credentials: AWS_CREDS,region: env.REGION) {
                   def outputs = cfnUpdate(stack: PROD_STACK, file: CF_FILE, params:[AWSAccessKeyId, AWSAccessKeySecret,WSO2InstanceType, KeyPairName, CertificateName, DBUsername, DBPassword, JDKVersion, AMIID], timeoutInMinutes:20, pollInterval:1000)
+                  env.TEST_URL = outputs.'ESBHttpUrl'
+                  echo "Test Endpoint: $TEST_URL"
                 }
+            }
+        }
+
+        stage(RUNNING_TEST) {
+            echo "##################################### Running Test ######################################"
+
+            TEST_PASS = sh (
+                                script: '''
+                                 ./test.sh
+                                ''',
+                                returnStatus: true
+                            )
+
+            if (TEST_PASS==1) {
+                handleError(RUNNING_TEST,1)
             }
         }
 
