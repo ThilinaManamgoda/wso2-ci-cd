@@ -114,7 +114,7 @@ node('master'){
 
             TEST_PASS = sh (
                                 script: '''
-                                 ./test.sh
+                                 ./ei_scenario_test.sh
                                 ''',
                                 returnStatus: true
                             )
@@ -151,7 +151,7 @@ node('master'){
 
             TEST_PASS = sh (
                                 script: '''
-                                 ./test.sh
+                                 ./ei_scenario_test.sh
                                 ''',
                                 returnStatus: true
                             )
