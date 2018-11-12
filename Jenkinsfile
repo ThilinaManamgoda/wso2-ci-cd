@@ -23,7 +23,7 @@ node('master'){
         def PUPPET_CONF_DIR='/home/jenkins/conf-home/modules/'
 
         stage(LOAD_ENV) {
-            echo "####################################### Loading Environment variables #######################################"
+            echo "##################################### Loading Environment variables #####################################"
             file = load ENV_FILE
         }
         stage(PREPARATION) {
@@ -60,10 +60,13 @@ node('master'){
                                 returnStatus: true
                             )
             env.PRODUCT_DIST="${PRODUCT}-${VERSION}.zip"
+            env.PACKER_BASE_AMI="ami-08610d683a74475e7"
+            env.PACKER_REGION="us-east-1"
+
             BUILD_FULL = sh (
                                 script: '''
                                  export AWS_SHARED_CREDENTIALS_FILE=$AWS_CREDS_FILE
-                                 packer build  -var "product=$PRODUCT_DIST" $PACKER_JSON
+                                 packer build  -var "product=$PRODUCT_DIST" -var "region=$PACKER_REGION" -var "base_ami=$PACKER_BASE_AMI" $PACKER_JSON
                                 ''',
                                 returnStatus: true
                             )
