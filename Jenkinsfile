@@ -66,7 +66,7 @@ node('master'){
                                 returnStatus: true
                             )
             env.PRODUCT_DIST="${PRODUCT}-${VERSION}.zip"
-            env.PACKER_BASE_AMI="ami-08610d683a74475e7"
+            env.PACKER_BASE_AMI="ami-0b2cdd7df5bf0386c"
             env.PACKER_REGION=env.REGION
 
             BUILD_FULL = sh (
