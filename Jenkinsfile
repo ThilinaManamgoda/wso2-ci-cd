@@ -25,6 +25,12 @@ node('master'){
         stage(LOAD_ENV) {
             echo "##################################### Loading Environment variables #####################################"
             file = load ENV_FILE
+            env.REGION=sh (
+                                script: '''
+                                 ec2metadata --availability-zone | sed \'s/[a-z]$//\'
+                                ''',
+                                returnStdout: true
+                            ).trim()
         }
         stage(PREPARATION) {
             echo "##################################### Cloning Git repositories #####################################"
@@ -61,7 +67,7 @@ node('master'){
                             )
             env.PRODUCT_DIST="${PRODUCT}-${VERSION}.zip"
             env.PACKER_BASE_AMI="ami-08610d683a74475e7"
-            env.PACKER_REGION="us-east-1"
+            env.PACKER_REGION=env.REGION
 
             BUILD_FULL = sh (
                                 script: '''
@@ -79,12 +85,6 @@ node('master'){
             def ami_info=packer_post.builds.artifact_id[0]
             def (value1, value2) = "$ami_info".tokenize( ':' )
             env.AMI_ID=value2
-            env.REGION=sh (
-                                script: '''
-                                 ec2metadata --availability-zone | sed \'s/[a-z]$//\'
-                                ''',
-                                returnStdout: true
-                            ).trim()
         }
 
         stage(STAGING_DEPLOYMENT) {
