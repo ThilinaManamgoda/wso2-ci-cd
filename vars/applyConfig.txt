@@ -1,0 +1,18 @@
+<h1>applyConfig</h1>
+
+<p>
+    Apply Build configurations to the pack.
+</p>
+
+<h2>How to use</h2>
+
+<p>
+    Below is an example how you can use "applyConfig"
+</p>
+
+<p>
+    <pre>
+        @Library('wso2-pipeline-core') _
+        applyConfig wum_creds: "${WUM_CREDS}", puppetManifest: "${PUPPET_CONF}", artifactsLoc: "${ARTIFACT_LOC}", zipLoc: "${IMAGE_RESOURCES_LOC}", wumHome: "${WUM_HOME}"
+    <pre>
+</p>

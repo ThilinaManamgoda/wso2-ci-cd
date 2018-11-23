@@ -1,0 +1,108 @@
+@Library('wso2-jenkins-core') _
+//Nodes
+def NODE_MASTER = "master"
+node(NODE_MASTER) {
+
+    //Stages
+    def STAGE_SETUP_ENV = "Setup Environment"
+    def STAGE_BUILD_PACK = "Build the pack"
+    def STAGE_BUILD_IMAGE = "Build the immutable image"
+    def STAGE_DEPLOY_STAGING = "Deploy to Staging"
+    def STAGE_RUNNING_TESTS = "Running Tests"
+    def STAGE_DEPLOY_PRODUCTION = "Deploy to Production"
+
+    //Stacks
+    def STACK_STAGING = "staging-stack"
+    def STACK_PROD = "prod-stack"
+
+    //Constants
+    def WUM_CREDS = 'wum_creds'
+    def AWS_CREDS = 'aws_creds'
+    def BASE_IMAGE = "ami-0b2cdd7df5bf0386c"
+
+    //Test Endpoint
+    def TEST_ENDPOINT = "ESBHttpUrl"
+
+    //Directories
+    def DEPLOYMENT_DIR = "deployment"
+    def CONF_HOME = "configs"
+    def ARTEFACTS_DIR = "artefacts"
+    def IMAGE_RESOURCES = "image-resources"
+    def PUPPET_CONF_DIR = "${WORKSPACE}/${CONF_HOME}"
+    def ARTIFACT_LOC = "${WORKSPACE}/${ARTEFACTS_DIR}/carbon-home"
+    def IMAGE_RESOURCES_LOC = "${WORKSPACE}/${IMAGE_RESOURCES}/"
+    def RESOURCES = "/home/jenkins/resources"
+    def PACKER_RESOURCES = "${WORKSPACE}/scripts/packer/packer-resources"
+    def WUM_HOME = "/var/libr/jenkins/.wum3"
+    //Config Files
+    def ENV = '/home/jenkins/jenkins_env'
+    def PUPPET_CONF = "${WORKSPACE}/${ARTEFACTS_DIR}/scripts/puppet/apply-config.sh"
+    def PROD_CF = "${WORKSPACE}/$DEPLOYMENT_DIR/cf.yaml"
+    def STAGING_CF = "${WORKSPACE}/$DEPLOYMENT_DIR/cf-staging.yaml"
+    def PACKER_MANIFEST = "${WORKSPACE}/${ARTEFACTS_DIR}/scripts/packer/manifest.json"
+    def PACKER_JSON = "${WORKSPACE}/${ARTEFACTS_DIR}/scripts/packer/packer.json"
+    def AWS_CREDS_LOC = '/home/ubuntu/.aws/credentials'
+    def TEST_SCRIPT = "${WORKSPACE}/${ARTEFACTS_DIR}/sample/tests/ei_scenario_test.sh"
+
+
+    try {
+
+        stage(STAGE_SETUP_ENV) {
+            log.info "##################################### Setting up the Environment #####################################"
+            file = load ENV
+            env.REGION = getAvailabilityZone
+            cloneRepoTodir env.GIT_REPO_ARTIFACTS, ARTEFACTS_DIR
+            cloneRepoTodir env.GIT_REPO_CF, DEPLOYMENT_DIR
+            cloneRepoTodir env.GIT_REPO_PUPPET, PUPPET_CONF_DIR
+            cp src: "${RESOURCES}/*", dest: "${IMAGE_RESOURCES_LOC}"
+            cp src: "${PACKER_RESOURCES}/*", dest: "${IMAGE_RESOURCES_LOC}"
+        }
+
+        stage(STAGE_BUILD_PACK) {
+            log.info "##################################### Generate Pack with configs #####################################"
+            applyConfig wum_creds: "${WUM_CREDS}", puppetManifest: "${PUPPET_CONF}", artifactsLoc: "${ARTIFACT_LOC}", zipLoc: "${IMAGE_RESOURCES_LOC}", wumHome: "${WUM_HOME}"
+        }
+
+        stage(STAGE_BUILD_IMAGE) {
+            log.info "##################################### Generate AMI #####################################"
+            env.IMAGE_ID = buildImage(product:"${PRODUCT}", version: "${VERSION}", region: "${REGION}",
+                    packerJson: "${PACKER_JSON}", image: "${BASE_IMAGE}", packerManifest: "${PACKER_MANIFEST}")
+        }
+
+        stage(STAGE_DEPLOY_STAGING) {
+            log.info "##################################### Deploying to Staging ######################################"
+            deployAWS(wso2InstanceType: "${env.WSO2InstanceType}", keyPairName: "${env.KeyPairName}", certName: "${env.CertificateName}",
+                    dbUsername: "${env.DBUsername}", dbPassword: "${env.DBPassword}", jdkVersion: "${env.JDKVersion}", amiID: "${env.IMAGE_ID}",
+                    credID: "${AWS_CREDS}", region: "${env.REGION}", environment: "${STACK_STAGING}", cf: "${STAGING_CF}",
+                    testEndpoint: "${TEST_ENDPOINT}", awsCredsFile: "${AWS_CREDS_LOC}")
+        }
+
+        stage(STAGE_RUNNING_TESTS) {
+            log.info "##################################### Running Test ######################################"
+            executeTest "${TEST_SCRIPT}"
+        }
+
+        stage(STAGE_DEPLOY_PRODUCTION) {
+            log.info "##################################### Deploying to Production ######################################"
+            deployAWS(wso2InstanceType: "${env.WSO2InstanceType}", keyPairName: "${env.KeyPairName}", certName: "${env.CertificateName}",
+                    dbUsername: "${env.DBUsername}", dbPassword: "${env.DBPassword}", jdkVersion: "${env.JDKVersion}", amiID: "${env.IMAGE_ID}",
+                    credID: "${AWS_CREDS}", region: "${env.REGION}", environment: "${STACK_PROD}", cf: "${PROD_CF}",
+                    testEndpoint: "${TEST_ENDPOINT}", awsCredsFile: "${AWS_CREDS_LOC}")
+        }
+
+        stage(STAGE_RUNNING_TESTS) {
+            log.info "##################################### Running Test ######################################"
+            executeTest "${TEST_SCRIPT}"
+        }
+    } catch (exc) {
+        echo "Caught: ${exc}"
+        String recipient = env.Email
+        mail subject: "${env.JOB_NAME} (${env.BUILD_NUMBER}) failed",
+                body: "It appears that ${env.BUILD_URL} is failing, somebody should do something about that",
+                to: recipient,
+                replyTo: recipient,
+                from: 'noreply@cicd.wso2'
+        throw exc
+    }
+
+}
