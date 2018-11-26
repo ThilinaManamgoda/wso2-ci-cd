@@ -11,7 +11,7 @@ def call(Map config) {
         )
 
         if (status == 1) {
-            throw new Exception("Copying failed")
+            throw new Exception("Copying failed. Source: ${config.src}, Destination: ${config.dest}")
         }
     }
 }
