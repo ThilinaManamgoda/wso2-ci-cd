@@ -1,8 +1,8 @@
 
 def call(src, dest) {
 
-    env.SRC = "dsdsd"
-    withEnv(['SRC = "${src}", DEST = "${dest}"']) {
+//    env.SRC = "dsdsd"
+    withEnv(['SRC = "ssss", DEST = "${dest}"']) {
 
         int status = sh(
                 script: '''
