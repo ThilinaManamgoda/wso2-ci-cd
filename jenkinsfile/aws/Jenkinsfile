@@ -50,6 +50,10 @@ node(NODE_MASTER) {
             cloneRepoTodir env.GIT_REPO_ARTIFACTS, ARTEFACTS_DIR
             cloneRepoTodir env.GIT_REPO_CF, DEPLOYMENT_DIR
             cloneRepoTodir env.GIT_REPO_PUPPET, PUPPET_CONF_DIR
+            dir("${IMAGE_RESOURCES}") {
+                // some block
+            }
+
             copy src: "${RESOURCES}/*", dest: "${IMAGE_RESOURCES_LOC}"
             copy src: "${PACKER_RESOURCES}/*", dest: "${IMAGE_RESOURCES_LOC}"
         }
