@@ -3,6 +3,7 @@ def call(Map config) {
 
 //    env.SRC = "dsdsd"
     def SRC1 = "${config.src}"
+    echo SRC1
     withEnv(['SRC="${SRC1}"']) {
 
         int status = sh(
