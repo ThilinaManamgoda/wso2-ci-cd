@@ -11,10 +11,10 @@ String call(Map config) {
                      ', PACKER_JSON = "${config.packerJson}", PACKER_MANIFEST = "${config.manifest}", IMAGE_RESOURCES = "${config.imageResources}"']) {
         echo ("${PRODUCT_DIST}")
         BUILD_FULL = sh(
-                script: '''
-                        export AWS_SHARED_CREDENTIALS_FILE=$AWS_CREDS_FILE
+                script: """
+                        export AWS_SHARED_CREDENTIALS_FILE=$AWS_CREDS_FILE 
                         packer build  -var "product=$PRODUCT_DIST" -var "region=$PACKER_REGION" -var "base_ami=$PACKER_BASE_IMAGE" -var "image_resources=$IMAGE_RESOURCES" -var "manifest=$PACKER_MANIFEST" $PACKER_JSON
-                        ''',
+                        """,
                 returnStatus: true
         )
     }
