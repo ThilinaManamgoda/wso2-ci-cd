@@ -5,6 +5,7 @@ def call(src, dest) {
         int status = sh(
                 script: '''
                 set +x
+                echo  ${SRC}
                 cp -r ${SRC} ${DEST}
                 ''',
                 returnStatus: true
