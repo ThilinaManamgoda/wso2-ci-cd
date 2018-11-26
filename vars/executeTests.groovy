@@ -1,9 +1,9 @@
-boolean call(script) {
-    return sh(
+def call(script) {
+    sh(
             script: '''
                     set +x
                     ${script}
                     ''',
             returnStatus: true
-    ) == 0
+    )
 }

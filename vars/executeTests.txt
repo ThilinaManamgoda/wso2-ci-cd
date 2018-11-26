@@ -7,7 +7,7 @@
 <h2>How to use</h2>
 
 <p>
-    Below is an example how you can use "executeTests". This will return the a boolean.
+    Below is an example how you can use "executeTests".
 </p>
 
 <p>

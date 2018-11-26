@@ -4,7 +4,7 @@ def call(Map config) {
 
     withEnv(['ARTIFACT_LOC = "${config.artifactsLoc}", ZIP_OUTPUT_LOC = "${config.zipLoc}", WUM_HOME = "${config.wumHome}", PUPPET_CONF_DIR = "${config.puppetConfLoc}']) {
         withCredentials([usernamePassword(credentialsId: "${config.wum_creds}", passwordVariable: 'WUM_PASSWORD', usernameVariable: 'WUM_USERNAME')]) {
-            BUILD_FULL = sh(
+            sh(
                     script: "${config.puppetManifest}",
                     returnStatus: true
             )
