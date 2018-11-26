@@ -44,7 +44,7 @@ node(NODE_MASTER) {
     try {
 
         stage(STAGE_SETUP_ENV) {
-            log.info "##################################### Setting up the Environment #####################################"
+            log.info "Setting up the Environment"
             file = load ENV
             env.REGION = getAvailabilityZone
             cloneRepoTodir env.GIT_REPO_ARTIFACTS, ARTEFACTS_DIR
@@ -55,18 +55,18 @@ node(NODE_MASTER) {
         }
 
         stage(STAGE_BUILD_PACK) {
-            log.info "##################################### Generate Pack with configs #####################################"
+            log.info "Generate Pack with configs"
             applyConfig wum_creds: "${WUM_CREDS}", puppetManifest: "${PUPPET_CONF}", artifactsLoc: "${ARTIFACT_LOC}", zipLoc: "${IMAGE_RESOURCES_LOC}", wumHome: "${WUM_HOME}", puppetConfLoc: "${PUPPET_CONF_DIR}"
         }
 
         stage(STAGE_BUILD_IMAGE) {
-            log.info "##################################### Generate AMI #####################################"
+            log.info " Generate AMI "
             env.IMAGE_ID = buildImage(product:"${PRODUCT}", version: "${VERSION}", region: "${REGION}",
                     packerJson: "${PACKER_JSON}", image: "${BASE_IMAGE}", packerManifest: "${PACKER_MANIFEST}")
         }
 
         stage(STAGE_DEPLOY_STAGING) {
-            log.info "##################################### Deploying to Staging ######################################"
+            log.info " Deploying to Staging "
             deployAWS(wso2InstanceType: "${env.WSO2InstanceType}", keyPairName: "${env.KeyPairName}", certName: "${env.CertificateName}",
                     dbUsername: "${env.DBUsername}", dbPassword: "${env.DBPassword}", jdkVersion: "${env.JDKVersion}", amiID: "${env.IMAGE_ID}",
                     credID: "${AWS_CREDS}", region: "${env.REGION}", environment: "${STACK_STAGING}", cf: "${STAGING_CF}",
@@ -74,12 +74,12 @@ node(NODE_MASTER) {
         }
 
         stage(STAGE_RUNNING_TESTS) {
-            log.info "##################################### Running Test ######################################"
+            log.info "Running Test "
             executeTest "${TEST_SCRIPT}"
         }
 
         stage(STAGE_DEPLOY_PRODUCTION) {
-            log.info "##################################### Deploying to Production ######################################"
+            log.info "Deploying to Production "
             deployAWS(wso2InstanceType: "${env.WSO2InstanceType}", keyPairName: "${env.KeyPairName}", certName: "${env.CertificateName}",
                     dbUsername: "${env.DBUsername}", dbPassword: "${env.DBPassword}", jdkVersion: "${env.JDKVersion}", amiID: "${env.IMAGE_ID}",
                     credID: "${AWS_CREDS}", region: "${env.REGION}", environment: "${STACK_PROD}", cf: "${PROD_CF}",
@@ -87,7 +87,7 @@ node(NODE_MASTER) {
         }
 
         stage(STAGE_RUNNING_TESTS) {
-            log.info "##################################### Running Test ######################################"
+            log.info " Running Test "
             executeTest "${TEST_SCRIPT}"
         }
     } catch (exc) {
