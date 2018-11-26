@@ -1,5 +1,7 @@
 
 def call(src, dest) {
+
+    env.SRC = "dsdsd"
     withEnv(['SRC = "${src}", DEST = "${dest}"']) {
 
         int status = sh(
