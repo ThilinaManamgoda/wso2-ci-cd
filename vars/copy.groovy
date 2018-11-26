@@ -1,14 +1,16 @@
 
-def call(Map config) {
-   int status = sh(
-        script: '''
+def call(src, dest) {
+    withEnv(['SRC = "${src}", DEST = "${dest}"']) {
+        int status = sh(
+                script: '''
                 set +x
-                cp -r ${config.src} ${config.dest}
+                cp -r ${SRC} ${DEST}
                 ''',
-        returnStatus: true
-    )
+                returnStatus: true
+        )
 
-    if (status == 1) {
-        throw new Exception("Copying failed")
+        if (status == 1) {
+            throw new Exception("Copying failed")
+        }
     }
 }
