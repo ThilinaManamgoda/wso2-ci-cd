@@ -1,4 +1,4 @@
-String cal(Map config) {
+String call(Map config) {
 //    env.PRODUCT_DIST = "${config.product}-${config.version}.zip"
 //    env.PACKER_BASE_IMAGE = "${config.image}"
 //    env.PACKER_REGION = "${config.region}"
