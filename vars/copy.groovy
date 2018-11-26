@@ -1,8 +1,8 @@
 
-def call(src, dest) {
+def call(Map config) {
 
 //    env.SRC = "dsdsd"
-    withEnv(['SRC="${src}"']) {
+    withEnv(['SRC="${config.src}"']) {
 
         int status = sh(
                 script: '''
