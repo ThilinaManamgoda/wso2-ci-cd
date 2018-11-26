@@ -7,7 +7,7 @@ String cal(Map config) {
 //    env.IMAGE_RESOURCES = "${config.imageResources}"
 
 
-    withEnv(['PRODUCT_DIST="${config.product}-${config.version}.zip", PACKER_BASE_IMAGE = "${config.image}", PACKER_REGION = "${config.region}"' +
+    withEnv(['PRODUCT_DIST = "${config.product}-${config.version}.zip", PACKER_BASE_IMAGE = "${config.image}", PACKER_REGION = "${config.region}"' +
                      ', PACKER_JSON = "${config.packerJson}", PACKER_MANIFEST = "${config.manifest}", IMAGE_RESOURCES = "${config.imageResources}"']) {
         BUILD_FULL = sh(
                 script: '''
