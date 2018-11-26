@@ -2,7 +2,7 @@
 def call(src, dest) {
 
 //    env.SRC = "dsdsd"
-    withEnv(['SRC="ssss"']) {
+    withEnv(['SRC="${src}"']) {
 
         int status = sh(
                 script: '''
