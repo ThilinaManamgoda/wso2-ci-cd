@@ -1,6 +1,7 @@
 
 def call(src, dest) {
     withEnv(['SRC = "${src}", DEST = "${dest}"']) {
+        echo (src)
         int status = sh(
                 script: '''
                 set +x
