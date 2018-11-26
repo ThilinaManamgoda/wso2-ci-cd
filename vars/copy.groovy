@@ -1,15 +1,10 @@
 
 def call(Map config) {
-
-//    env.SRC = "dsdsd"
-    def SRC1 = "${config.src}"
-    echo SRC1
-    withEnv(["SRC=${config.src}"]) {
+    withEnv(["SRC=${config.src}", "DEST=${config.dest}"]) {
 
         int status = sh(
                 script: '''
                 set +x
-                echo  "ss ${SRC}" 
                 cp -r ${SRC} ${DEST}
                 ''',
                 returnStatus: true

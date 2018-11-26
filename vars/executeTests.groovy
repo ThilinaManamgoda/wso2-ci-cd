@@ -1,9 +1,11 @@
 def call(script) {
-    sh(
-            script: '''
+    withEnv(["script=${script}"]) {
+        sh(
+                script: '''
                     set +x
                     ${script}
                     ''',
-            returnStatus: true
-    )
+                returnStatus: true
+        )
+    }
 }
