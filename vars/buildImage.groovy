@@ -9,6 +9,7 @@ String call(Map config) {
 
     withEnv(['PRODUCT_DIST = "${config.product}-${config.version}.zip", PACKER_BASE_IMAGE = "${config.image}", PACKER_REGION = "${config.region}"' +
                      ', PACKER_JSON = "${config.packerJson}", PACKER_MANIFEST = "${config.manifest}", IMAGE_RESOURCES = "${config.imageResources}"']) {
+        echo ("${PRODUCT_DIST}")
         BUILD_FULL = sh(
                 script: '''
                         export AWS_SHARED_CREDENTIALS_FILE=$AWS_CREDS_FILE
