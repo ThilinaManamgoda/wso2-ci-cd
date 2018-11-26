@@ -1,10 +1,14 @@
 
 def call(src, dest) {
-    sh(
+   int status = sh(
         script: '''
                 set +x
                 cp -r ${src} ${dest}
                 ''',
         returnStatus: true
     )
+
+    if (status == 1) {
+        throw new Exception("Copying failed")
+    }
 }
