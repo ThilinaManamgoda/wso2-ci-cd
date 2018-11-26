@@ -51,7 +51,7 @@ node(NODE_MASTER) {
             cloneRepoTodir env.GIT_REPO_CF, DEPLOYMENT_DIR
             cloneRepoTodir env.GIT_REPO_PUPPET, PUPPET_CONF_DIR
 
-            sh "test -d $IMAGE_RESOURCES && mkdir $IMAGE_RESOURCES"
+            sh "! test -d $IMAGE_RESOURCES && mkdir $IMAGE_RESOURCES"
 
 
             copy src: "${RESOURCES}/*", dest: "${IMAGE_RESOURCES_LOC}"
