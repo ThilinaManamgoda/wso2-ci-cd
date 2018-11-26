@@ -1,9 +1,9 @@
 
-def call(src, dest) {
+def call(Map config) {
    int status = sh(
         script: '''
                 set +x
-                cp -r ${src} ${dest}
+                cp -r ${config.src} ${config.dest}
                 ''',
         returnStatus: true
     )
