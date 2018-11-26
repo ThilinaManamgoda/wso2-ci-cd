@@ -28,7 +28,7 @@ node(NODE_MASTER) {
     def ARTIFACT_LOC = "${WORKSPACE}/${ARTEFACTS_DIR}/samples/artefacts/carbon-home"
     def IMAGE_RESOURCES_LOC = "${WORKSPACE}/${IMAGE_RESOURCES}/"
     def RESOURCES = "/home/jenkins/resources"
-    def PACKER_RESOURCES = "${WORKSPACE}/scripts/packer/packer-resources"
+    def PACKER_RESOURCES = "${WORKSPACE}/${ARTEFACTS_DIR}/scripts/packer/packer-resources"
     def WUM_HOME = "/var/lib/jenkins/.wum3"
     //Config Files
     def ENV = '/home/jenkins/jenkins_env'
