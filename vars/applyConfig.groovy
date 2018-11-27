@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
 
 /*
-*  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*  Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 *  WSO2 Inc. licenses this file to you under the Apache License,
 *  Version 2.0 (the "License"); you may not use this file except
@@ -29,21 +29,21 @@ def call(Map config) {
                     script: "${config.puppetManifest}",
                     returnStatus: true
             )
-            if (status == Constants.ControlConstants.FAILED_WUM_UPDATE) {
+            if (status == Constants.ControlConstants.STATUS_FAILED_WUM_UPDATE) {
                 throw new Exception("Failed to apply updates")
-            } else if (status == Constants.ControlConstants.FAILED_WUM_ADD) {
+            } else if (status == Constants.ControlConstants.STATUS_FAILED_WUM_ADD) {
                 throw new Exception("Wum add process failed")
-            } else if (status == Constants.ControlConstants.FAILED_INPLACE_UPDATES) {
+            } else if (status == Constants.ControlConstants.STATUS_FAILED_INPLACE_UPDATES) {
                 throw new Exception("Inplace update process failed")
-            } else if (status == Constants.ControlConstants.FAILED_PUPPET_APPLY) {
+            } else if (status == Constants.ControlConstants.STATUS_FAILED_PUPPET_APPLY) {
                 throw new Exception("Puppet apply process failed")
-            } else if (status == Constants.ControlConstants.FAILED_TO_MOVE_UPDATED_PRODUCT) {
+            } else if (status == Constants.ControlConstants.STATUS_FAILED_TO_MOVE_UPDATED_PRODUCT) {
                 throw new Exception("Failed to move updated pack")
-            } else if (status == Constants.ControlConstants.FAILED_UNZIP) {
+            } else if (status == Constants.ControlConstants.STATUS_FAILED_UNZIP) {
                 throw new Exception("Failed to unzip")
-            } else if (status == Constants.ControlConstants.FAILED_RM_UNZIP) {
+            } else if (status == Constants.ControlConstants.STATUS_FAILED_RM_UNZIP) {
                 throw new Exception("Failed to remove zip")
-            } else if (status == Constants.ControlConstants.FAILED_ARTIFACT_APPLY) {
+            } else if (status == Constants.ControlConstants.STATUS_FAILED_ARTIFACT_APPLY) {
                 throw new Exception("Failed to apply artefatcs")
             }
         }

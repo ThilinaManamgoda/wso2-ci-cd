@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 /*
-*  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*  Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 *  WSO2 Inc. licenses this file to you under the Apache License,
 *  Version 2.0 (the "License"); you may not use this file except
@@ -20,7 +20,6 @@ import org.wso2.util.Constants
 
 def call(Map config) {
     withEnv(["SRC=${config.src}", "DEST=${config.dest}"]) {
-
         int status = sh(
                 script: '''
                 set +x
@@ -28,7 +27,6 @@ def call(Map config) {
                 ''',
                 returnStatus: true
         )
-
         if (status != Constants.ControlConstants.STATUS_COMPLETED) {
             throw new Exception("Copying failed. Source: ${config.src}, Destination: ${config.dest}")
         }
