@@ -1,3 +1,5 @@
+import org.wso2.util.Constants
+
 String call(Map config) {
 //    env.PRODUCT_DIST = "${config.product}-${config.version}.zip"
 //    env.PACKER_BASE_IMAGE = "${config.image}"
@@ -18,7 +20,7 @@ String call(Map config) {
                         """,
                 returnStatus: true
         )
-        if (status != 0) {
+        if (status != Constants.ControlConstants.STATUS_COMPLETED) {
             throw new Exception("AMI building is failed !")
         }
     }

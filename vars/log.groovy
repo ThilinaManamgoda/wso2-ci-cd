@@ -1,4 +1,3 @@
-import org.wso2.util.Constants
 
 def err(msg) {
     ansiColor('xterm') {
