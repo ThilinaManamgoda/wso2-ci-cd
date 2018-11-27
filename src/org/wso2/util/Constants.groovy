@@ -1,4 +1,4 @@
-package wso2.util
+package org.wso2.util
 
 /**
  * This class holds constants
