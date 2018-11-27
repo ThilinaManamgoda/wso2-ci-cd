@@ -16,18 +16,20 @@
 * under the License.
 */
 
-@Library('wso2-jenkins-core') _
+@Library('wso2-jenkins-core')
+import org.wso2.util.Constants
+
 //Nodes
 def NODE_MASTER = "master"
 node(NODE_MASTER) {
 
     //Stages
-    def STAGE_SETUP_ENV = "Setup Environment"
-    def STAGE_BUILD_PACK = "Build the pack"
-    def STAGE_BUILD_IMAGE = "Build the immutable image"
-    def STAGE_DEPLOY_STAGING = "Deploy to Staging"
-    def STAGE_RUNNING_TESTS = "Running Tests"
-    def STAGE_DEPLOY_PRODUCTION = "Deploy to Production"
+//    def SETUP_ENV = "Setup Environment"
+//    def STAGE_BUILD_PACK = "Build the pack"
+//    def STAGE_BUILD_IMAGE = "Build the immutable image"
+//    def STAGE_DEPLOY_STAGING = "Deploy to Staging"
+//    def STAGE_RUNNING_TESTS = "Running Tests"
+//    def STAGE_DEPLOY_PRODUCTION = "Deploy to Production"
     //Stacks
     def STACK_STAGING = "staging-stack"
     def STACK_PROD = "prod-stack"
@@ -45,7 +47,7 @@ node(NODE_MASTER) {
     def PUPPET_CONF_DIR = "${WORKSPACE}/${CONF_HOME_DIR}"
     def ARTIFACT_LOC = "${WORKSPACE}/${ARTEFACTS_DIR}/samples/artefacts/carbon-home"
     def IMAGE_RESOURCES_LOC = "${WORKSPACE}/${IMAGE_RESOURCES}/"
-    def RESOURCES = "/home/jenkins/resources"
+    def RESOURCES = Constants.Paths.RESOURCES
     def PACKER_RESOURCES = "${WORKSPACE}/${ARTEFACTS_DIR}/scripts/packer/packer-resources"
     def WUM_HOME = "/var/lib/jenkins/.wum3"
     //Config Files
@@ -60,7 +62,7 @@ node(NODE_MASTER) {
 
 
     try {
-        stage(STAGE_SETUP_ENV) {
+        stage(Constants.Stages.SETUP_ENV) {
             log.info "Setting up the Environment"
             file = load ENV
             env.REGION = getAvailabilityZone
@@ -74,20 +76,20 @@ node(NODE_MASTER) {
             copy ([src: "${PACKER_RESOURCES}/*", dest: "${IMAGE_RESOURCES_LOC}"])
         }
 
-        stage(STAGE_BUILD_PACK) {
+        stage(Constants.Stages.BUILD_PACK) {
             log.info "Generate Pack with configs"
             applyConfig([wum_creds: "${WUM_CREDS}", puppetManifest: "${PUPPET_CONF}", artifactsLoc: "${ARTIFACT_LOC}",
                          zipLoc: "${IMAGE_RESOURCES_LOC}", wumHome: "${WUM_HOME}", puppetConfLoc: "${PUPPET_CONF_DIR}"])
         }
 
-        stage(STAGE_BUILD_IMAGE) {
+        stage(Constants.Stages.BUILD_IMAGE) {
             log.info " Generate AMI "
             env.IMAGE_ID = buildImage([product:"${PRODUCT}", version: "${VERSION}", region: "${REGION}",
                     packerJson: "${PACKER_JSON}", image: "${BASE_IMAGE}", packerManifest: "${PACKER_MANIFEST}",
                     awsCredsFile: "${AWS_CREDS_LOC}", imageResources: "${IMAGE_RESOURCES_LOC}"])
         }
 
-        stage(STAGE_DEPLOY_STAGING) {
+        stage(Constants.Stages.DEPLOY_STAGING) {
             log.info "Deploying to Staging"
             deployAWS([wso2InstanceType: "${env.WSO2InstanceType}", keyPairName: "${env.KeyPairName}",
                     certName: "${env.CertificateName}", dbUsername: "${env.DBUsername}", dbPassword: "${env.DBPassword}"
@@ -96,12 +98,12 @@ node(NODE_MASTER) {
                     testEndpoint: "${TEST_ENDPOINT}", awsCredsFile: "${AWS_CREDS_LOC}"])
         }
 
-        stage(STAGE_RUNNING_TESTS) {
+        stage(Constants.Stages.RUNNING_TESTS) {
             log.info "Running Test"
             executeTest "${TEST_SCRIPT}"
         }
 
-        stage(STAGE_DEPLOY_PRODUCTION) {
+        stage(Constants.Stages.DEPLOY_PRODUCTION) {
             log.info "Deploying to Production"
             deployAWS([wso2InstanceType: "${env.WSO2InstanceType}", keyPairName: "${env.KeyPairName}",
                     certName: "${env.CertificateName}", dbUsername: "${env.DBUsername}", jdkVersion: "${env.JDKVersion}"
@@ -110,7 +112,7 @@ node(NODE_MASTER) {
                     testEndpoint: "${TEST_ENDPOINT}", awsCredsFile: "${AWS_CREDS_LOC}"])
         }
 
-        stage(STAGE_RUNNING_TESTS) {
+        stage(Constants.Stages.RUNNING_TESTS) {
             log.info " Running Test "
             executeTest "${TEST_SCRIPT}"
         }

@@ -32,4 +32,15 @@ class Constants {
         static final int STATUS_FAILED_RM_UNZIP = 16
         static final int STATUS_FAILED_ARTIFACT_APPLY = 17
     }
+    class Stages {
+        static final String SETUP_ENV = "Setup Environment"
+        static final String BUILD_PACK = "Build the pack"
+        static final String BUILD_IMAGE = "Build the immutable image"
+        static final String DEPLOY_STAGING = "Deploy to Staging"
+        static final String RUNNING_TESTS = "Running Tests"
+        static final String DEPLOY_PRODUCTION = "Deploy to Production"
+    }
+    class Paths {
+        static final String RESOURCES = "/home/jenkins/resources"
+    }
 }
