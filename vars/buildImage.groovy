@@ -7,14 +7,20 @@ String call(Map config) {
 //    env.IMAGE_RESOURCES = "${config.imageResources}"
 
 
-    withEnv(["PRODUCT_DIST=${config.product}-${config.version}.zip", "PACKER_BASE_IMAGE=${config.image}", "PACKER_REGION=${config.region}", "PACKER_JSON=${config.packerJson}", "PACKER_MANIFEST=${config.packerManifest}", "IMAGE_RESOURCES=${config.imageResources}", "AWS_CREDS_FILE=${config.awsCredsFile}"]) {
-        BUILD_FULL = sh(
+    withEnv(["PRODUCT_DIST=${config.product}-${config.version}.zip", "PACKER_BASE_IMAGE=${config.image}",
+             "PACKER_REGION=${config.region}", "PACKER_JSON=${config.packerJson}",
+             "PACKER_MANIFEST=${config.packerManifest}", "IMAGE_RESOURCES=${config.imageResources}",
+             "AWS_CREDS_FILE=${config.awsCredsFile}"]) {
+        int status = sh(
                 script: """
                         export AWS_SHARED_CREDENTIALS_FILE=$AWS_CREDS_FILE 
                         packer build  -var "product=$PRODUCT_DIST" -var "region=$PACKER_REGION" -var "base_ami=$PACKER_BASE_IMAGE" -var "image_resources=$IMAGE_RESOURCES" -var "manifest=$PACKER_MANIFEST" $PACKER_JSON
                         """,
                 returnStatus: true
         )
+        if (status != 0) {
+            throw new Exception("AMI building is failed !")
+        }
     }
     def packer_post = readJSON file: "${config.packerManifest}", text: ''
     def size = packer_post.builds.artifact_id.size()
