@@ -72,8 +72,6 @@ node(NODE_MASTER) {
             }
             copy ([src: "${RESOURCES}/*", dest: "${IMAGE_RESOURCES_LOC}"])
             copy ([src: "${PACKER_RESOURCES}/*", dest: "${IMAGE_RESOURCES_LOC}"])
-            Map map = [ss:" s"]
-            copy map
         }
 
         stage(STAGE_BUILD_PACK) {

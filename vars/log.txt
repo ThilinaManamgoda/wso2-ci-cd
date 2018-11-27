@@ -14,5 +14,6 @@
     <pre>
         @Library('wso2-pipeline-core') _
         log.info "Testing"
+        log.err "Error"
     <pre>
 </p>
