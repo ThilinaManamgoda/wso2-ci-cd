@@ -1,12 +1,12 @@
 
 def err(msg) {
     ansiColor('xterm') {
-        echo "\u001B[31mINFO: $msg"
+        echo "\u001B[31mERROR: $msg"
     }
 }
 def info(msg) {
     ansiColor('xterm') {
-        echo "\u001B[32mERROR: $msg"
+        echo "\u001B[32mINFO: $msg"
     }
 
 }
