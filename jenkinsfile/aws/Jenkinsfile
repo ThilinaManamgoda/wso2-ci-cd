@@ -23,13 +23,6 @@ import org.wso2.util.Constants
 def NODE_MASTER = "master"
 node(NODE_MASTER) {
 
-    //Stages
-//    def SETUP_ENV = "Setup Environment"
-//    def STAGE_BUILD_PACK = "Build the pack"
-//    def STAGE_BUILD_IMAGE = "Build the immutable image"
-//    def STAGE_DEPLOY_STAGING = "Deploy to Staging"
-//    def STAGE_RUNNING_TESTS = "Running Tests"
-//    def STAGE_DEPLOY_PRODUCTION = "Deploy to Production"
     //Stacks
     def STACK_STAGING = "staging-stack"
     def STACK_PROD = "prod-stack"
@@ -66,9 +59,9 @@ node(NODE_MASTER) {
             log.info "Setting up the Environment"
             file = load ENV
             env.REGION = getAvailabilityZone
-            cloneRepoTodir env.GIT_REPO_ARTIFACTS, ARTEFACTS_DIR
-            cloneRepoTodir env.GIT_REPO_CF, DEPLOYMENT_DIR
-            cloneRepoTodir env.GIT_REPO_PUPPET, PUPPET_CONF_DIR
+            cloneRepoToDir env.GIT_REPO_ARTIFACTS, ARTEFACTS_DIR
+            cloneRepoToDir env.GIT_REPO_CF, DEPLOYMENT_DIR
+            cloneRepoToDir env.GIT_REPO_PUPPET, PUPPET_CONF_DIR
             if(!fileExists("${IMAGE_RESOURCES}")) {
                 sh "mkdir $IMAGE_RESOURCES"
             }
