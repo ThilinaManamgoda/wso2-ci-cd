@@ -1,15 +1,12 @@
 
-def RED = "\u001B[31m"
-def GREEN = "\u001b[32m"
-
 def err(msg) {
     ansiColor('xterm') {
-        echo "${RED}INFO: $msg"
+        echo "\u001B[31mINFO: $msg"
     }
 }
 def info(msg) {
     ansiColor('xterm') {
-        echo "${GREEN}ERROR: $msg"
+        echo "\u001B[32mERROR: $msg"
     }
 
 }
