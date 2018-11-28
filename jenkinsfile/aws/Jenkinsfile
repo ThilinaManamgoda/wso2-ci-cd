@@ -77,7 +77,7 @@ node(NODE_MASTER) {
 
         stage(Constants.Stages.BUILD_IMAGE) {
             log.info " Generate AMI "
-            env.IMAGE_ID = buildImage([product:"${PRODUCT}", version: "${VERSION}", region: "${REGION}",
+            env.IMAGE_ID = buildImage([product:"params.PRODUCT", version: "params.VERSION", region: "${REGION}",
                     packerJson: "${PACKER_JSON}", image: "${BASE_IMAGE}", packerManifest: "${PACKER_MANIFEST}",
                     awsCredsFile: "${AWS_CREDS_LOC}", imageResources: "${IMAGE_RESOURCES_LOC}"])
         }
