@@ -35,23 +35,23 @@ node(NODE_MASTER) {
     //Directories
     def DEPLOYMENT_DIR = "deployment"
     def CONF_HOME_DIR = "configs"
-    def ARTEFACTS_DIR = "artefacts"
+    def ARTIFACTS_DIR = "artifacts"
     def IMAGE_RESOURCES = "image-resources"
     def PUPPET_CONF_DIR = "${WORKSPACE}/${CONF_HOME_DIR}"
-    def ARTIFACT_LOC = "${WORKSPACE}/${ARTEFACTS_DIR}/samples/artefacts/carbon-home"
+    def ARTIFACT_LOC = "${WORKSPACE}/${ARTIFACTS_DIR}/samples/artifacts/carbon-home"
     def IMAGE_RESOURCES_LOC = "${WORKSPACE}/${IMAGE_RESOURCES}/"
     def RESOURCES = Constants.Paths.RESOURCES
-    def PACKER_RESOURCES = "${WORKSPACE}/${ARTEFACTS_DIR}/scripts/packer/packer-resources"
+    def PACKER_RESOURCES = "${WORKSPACE}/${ARTIFACTS_DIR}/scripts/packer/packer-resources"
     def WUM_HOME = "/var/lib/jenkins/.wum3"
     //Config Files
     def ENV = '/home/jenkins/jenkins_env'
-    def PUPPET_CONF = "${WORKSPACE}/${ARTEFACTS_DIR}/scripts/puppet/apply-config.sh"
+    def PUPPET_CONF = "${WORKSPACE}/${ARTIFACTS_DIR}/scripts/puppet/apply-config.sh"
     def PROD_CF = "${WORKSPACE}/${DEPLOYMENT_DIR}/cf.yaml"
     def STAGING_CF = "${WORKSPACE}/${DEPLOYMENT_DIR}/cf-staging.yaml"
-    def PACKER_MANIFEST = "${WORKSPACE}/${ARTEFACTS_DIR}/scripts/packer/manifest.json"
-    def PACKER_JSON = "${WORKSPACE}/${ARTEFACTS_DIR}/scripts/packer/packer.json"
+    def PACKER_MANIFEST = "${WORKSPACE}/${ARTIFACTS_DIR}/scripts/packer/manifest.json"
+    def PACKER_JSON = "${WORKSPACE}/${ARTIFACTS_DIR}/scripts/packer/packer.json"
     def AWS_CREDS_LOC = '/home/ubuntu/.aws/credentials'
-    def TEST_SCRIPT = "${WORKSPACE}/${ARTEFACTS_DIR}/sample/tests/ei_scenario_test.sh"
+    def TEST_SCRIPT = "${WORKSPACE}/${ARTIFACTS_DIR}/sample/tests/ei_scenario_test.sh"
 
 
     try {
@@ -59,7 +59,7 @@ node(NODE_MASTER) {
             log.info "Setting up the Environment"
             file = load ENV
             env.REGION = getAvailabilityZone
-            cloneRepoToDir env.GIT_REPO_ARTIFACTS, ARTEFACTS_DIR
+            cloneRepoToDir env.GIT_REPO_ARTIFACTS, ARTIFACTS_DIR
             cloneRepoToDir env.GIT_REPO_CF, DEPLOYMENT_DIR
             cloneRepoToDir env.GIT_REPO_PUPPET, PUPPET_CONF_DIR
             if(!fileExists("${IMAGE_RESOURCES}")) {
